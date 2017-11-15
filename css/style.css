@@ -1,0 +1,42 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#board>div {
+  width: 40px;
+  height: 40px;
+  border: 1px solid black;
+  float: left;
+}
+
+#board {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.furry {
+  background-color: black;
+}
+
+.coin {
+  background-color: red;
+}
+
+.hide {
+  display: none;
+}
+
+.gameover {
+  background-color: grey;
+}
+
+#over, #again {
+  display: none;
+}
+
+;
