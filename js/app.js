@@ -1,9 +1,8 @@
 /*game constructor*/
 function Game() {
-  this.snake = new Snake(0, 0),
-    this.coin = new Coin,
+  this.snake = new Snake(0, 0), //creates a new snake in a (0,0) position
+    this.coin = new Coin, //creates a new coin
     this.score = 0,
-    this.counter = 1,
     this.elements = [0],
     this.board = document.querySelectorAll('#board div'),
     this.scoreboard = document.querySelector('#scoreboard'),
@@ -28,7 +27,7 @@ Game.prototype.position = function(a, b) {
   return a + 10 * b;
 };
 
-
+/*let's make snake and coin appear*/
 Game.prototype.render = function() {
   var snakePosition = this.position(this.snake.x, this.snake.y);
   var coinPosition = this.position(this.coin.x, this.coin.y);
@@ -37,14 +36,17 @@ Game.prototype.render = function() {
   for(var i = 0; i < this.board.length; i++) {
     this.board[i].classList.remove('snake');
   };
-
+  /*If the snake is not outside the board (10x10): */
   if((self.snake.y >= 0) && (self.snake.y < 10) && (self.snake.x >= 0) && (self.snake.x < 10)) {
-    // self.board[furryPosition].classList.add("furry");
+    /*then show all of his elements:*/
     for(var i = 0; i < self.elements.length; i++) {
       self.board[self.elements[i]].classList.add("snake");
-      self.board[self.elements[i]].dataset.head = false;
     };
+    /*data-head attribute will help us to check the collision with a tail*/
+    self.board[self.elements[0]].dataset.head = true; // first element is the head
+
     for(var i = 1; i < self.elements.length; i++) {
+      self.board[self.elements[i]].dataset.head = false; //and the others not
       self.board[self.elements[i]].dataset.snake = "yes";
     }
   } else {
@@ -104,7 +106,6 @@ Game.prototype.tick = function() {
       self.elements.pop();
 
       self.elements.unshift(snakePosition);
-      self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
     case "left":
@@ -112,7 +113,6 @@ Game.prototype.tick = function() {
       self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
       self.elements.pop();
       self.elements.unshift(snakePosition);
-      self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
     case "down":
@@ -120,7 +120,6 @@ Game.prototype.tick = function() {
       self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
       self.elements.pop();
       self.elements.unshift(snakePosition);
-      self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
     case "up":
@@ -128,7 +127,6 @@ Game.prototype.tick = function() {
       self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
       self.elements.pop();
       self.elements.unshift(snakePosition);
-      self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
   }
@@ -139,10 +137,7 @@ Game.prototype.tick = function() {
 
   if(snakePosition == coinPosition) {
     self.score++;
-    self.counter++;
     self.elements[self.elements.length] = snakePosition;
-
-    // console.log(self.elements);
     self.board[snakePosition].classList.remove('coin');
     self.coin = new Coin;
     self.board[self.position(self.coin.x, self.coin.y)].classList.add('coin');
