@@ -35,19 +35,22 @@ Game.prototype.render = function() {
   console.log(self.elements);
   for(var i = 0; i < this.board.length; i++) {
     this.board[i].classList.remove('snake');
+    this.board[i].dataset.head = false;
   };
+
+
   /*If the snake is not outside the board (10x10): */
-  if((self.snake.y >= 0) && (self.snake.y < 10) && (self.snake.x >= 0) && (self.snake.x < 10)) {
+  if(((self.snake.y >= 0) && (self.snake.y < 10) && (self.snake.x >= 0) && (self.snake.x < 10)) && !((self.board[self.elements[0]]).dataset.tail === true)) {
     /*then show all of his elements:*/
+    self.board[self.elements[0]].dataset.head = true;
+
     for(var i = 0; i < self.elements.length; i++) {
       self.board[self.elements[i]].classList.add("snake");
     };
-    /*data-head attribute will help us to check the collision with a tail*/
-    self.board[self.elements[0]].dataset.head = true; // first element is the head
 
     for(var i = 1; i < self.elements.length; i++) {
-      self.board[self.elements[i]].dataset.head = false; //and the others not
-      self.board[self.elements[i]].dataset.snake = "yes";
+
+      self.board[self.elements[i]].dataset.tail = true;
     }
   } else {
     document.querySelector('#board').classList.add("hide");
@@ -101,36 +104,40 @@ Game.prototype.tick = function() {
   switch(self.snake.direction) {
     case "right":
       self.snake.x++;
-      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
 
+      self.board[self.elements[self.elements.length - 1]].dataset.tail = false;
+      // self.board[self.elements[0]].dataset.head = true;
       self.elements.pop();
 
       self.elements.unshift(snakePosition);
-      console.log(self.elements);
+      // console.log(self.elements);
       break;
     case "left":
       self.snake.x--;
-      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
+      self.board[self.elements[self.elements.length - 1]].dataset.tail = false;
       self.elements.pop();
       self.elements.unshift(snakePosition);
-      console.log(self.elements);
+      // console.log(self.elements);
       break;
     case "down":
       self.snake.y++;
-      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
+      self.board[self.elements[self.elements.length - 1]].dataset.tail = false;
       self.elements.pop();
       self.elements.unshift(snakePosition);
-      console.log(self.elements);
+      // console.log(self.elements);
       break;
     case "up":
       self.snake.y--;
-      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
+      self.board[self.elements[self.elements.length - 1]].dataset.tail = false;
       self.elements.pop();
       self.elements.unshift(snakePosition);
-      console.log(self.elements);
+      // console.log(self.elements);
       break;
   }
+
   self.render();
+
+
 
   var snakePosition = self.position(self.snake.x, self.snake.y);
   var coinPosition = self.position(self.coin.x, self.coin.y);
