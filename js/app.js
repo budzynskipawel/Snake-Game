@@ -4,6 +4,8 @@ function Game() {
     this.furry = new Furry(0, 0),
     this.coin = new Coin,
     this.score = 0,
+    this.counter = 1,
+    this.elements = [0],
     this.board = document.querySelectorAll('#board div'),
     this.scoreboard = document.querySelector('#scoreboard'),
     self = this,
@@ -30,14 +32,22 @@ Game.prototype.render = function() {
 
   var furryPosition = this.position(this.furry.x, this.furry.y);
   var coinPosition = this.position(this.coin.x, this.coin.y);
-
+  self.elements[0] = furryPosition;
+  console.log(self.elements);
   for(var i = 0; i < this.board.length; i++) {
     this.board[i].classList.remove('furry');
+
   };
 
   if((self.furry.y >= 0) && (self.furry.y < 10) && (self.furry.x >= 0) && (self.furry.x < 10)) {
-    self.board[furryPosition].classList.add("furry");
-
+    // self.board[furryPosition].classList.add("furry");
+    for(var i = 0; i < self.elements.length; i++) {
+      self.board[self.elements[i]].classList.add("furry");
+      self.board[self.elements[i]].dataset.head = false;
+    };
+    for(var i = 1; i < self.elements.length; i++) {
+      self.board[self.elements[i]].dataset.snake = "yes";
+    }
   } else {
     document.querySelector('#board').classList.add("hide");
     document.querySelector('body').classList.add("gameover");
@@ -86,19 +96,41 @@ Game.prototype.keyboard = function(event) {
 
 Game.prototype.tick = function() {
 
-
+  var furryPosition = self.position(self.furry.x, self.furry.y)
   switch(self.furry.direction) {
     case "right":
       self.furry.x++;
+      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
+
+      self.elements.pop();
+
+      self.elements.unshift(furryPosition);
+      self.board[self.elements[0]].dataset.head = true;
+      console.log(self.elements);
       break;
     case "left":
       self.furry.x--;
+      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
+      self.elements.pop();
+      self.elements.unshift(furryPosition);
+      self.board[self.elements[0]].dataset.head = true;
+      console.log(self.elements);
       break;
     case "down":
       self.furry.y++;
+      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
+      self.elements.pop();
+      self.elements.unshift(furryPosition);
+      self.board[self.elements[0]].dataset.head = true;
+      console.log(self.elements);
       break;
     case "up":
       self.furry.y--;
+      self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
+      self.elements.pop();
+      self.elements.unshift(furryPosition);
+      self.board[self.elements[0]].dataset.head = true;
+      console.log(self.elements);
       break;
   }
   self.render();
@@ -108,6 +140,10 @@ Game.prototype.tick = function() {
 
   if(furryPosition == coinPosition) {
     self.score++;
+    self.counter++;
+    self.elements[self.elements.length] = furryPosition;
+
+    // console.log(self.elements);
     self.board[furryPosition].classList.remove('coin');
     self.coin = new Coin;
     self.board[self.position(self.coin.x, self.coin.y)].classList.add('coin');
