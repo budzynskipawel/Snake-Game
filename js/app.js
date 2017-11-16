@@ -1,7 +1,6 @@
+/*game constructor*/
 function Game() {
-  this.width = 10,
-    this.height = 10,
-    this.furry = new Furry(0, 0),
+  this.snake = new Snake(0, 0),
     this.coin = new Coin,
     this.score = 0,
     this.counter = 1,
@@ -12,37 +11,37 @@ function Game() {
     this.handler = setInterval(this.tick, 500),
     document.addEventListener("keydown", this.keyboard)
 };
-
-function Furry(x, y) {
+/*snake constructor - coordinates x, y*/
+function Snake(x, y) {
   this.x = x,
     this.y = y,
     this.direction = "right"
 };
-
+/*coin constructor = random coordinates from 0 to 10*/
 function Coin() {
   this.x = Math.floor(10 * Math.random()),
     this.y = Math.floor(10 * Math.random())
 };
 
+/*2 coordinates converted into one */
 Game.prototype.position = function(a, b) {
   return a + 10 * b;
 };
 
-Game.prototype.render = function() {
 
-  var furryPosition = this.position(this.furry.x, this.furry.y);
+Game.prototype.render = function() {
+  var snakePosition = this.position(this.snake.x, this.snake.y);
   var coinPosition = this.position(this.coin.x, this.coin.y);
-  self.elements[0] = furryPosition;
+  self.elements[0] = snakePosition;
   console.log(self.elements);
   for(var i = 0; i < this.board.length; i++) {
-    this.board[i].classList.remove('furry');
-
+    this.board[i].classList.remove('snake');
   };
 
-  if((self.furry.y >= 0) && (self.furry.y < 10) && (self.furry.x >= 0) && (self.furry.x < 10)) {
+  if((self.snake.y >= 0) && (self.snake.y < 10) && (self.snake.x >= 0) && (self.snake.x < 10)) {
     // self.board[furryPosition].classList.add("furry");
     for(var i = 0; i < self.elements.length; i++) {
-      self.board[self.elements[i]].classList.add("furry");
+      self.board[self.elements[i]].classList.add("snake");
       self.board[self.elements[i]].dataset.head = false;
     };
     for(var i = 1; i < self.elements.length; i++) {
@@ -73,19 +72,19 @@ Game.prototype.keyboard = function(event) {
   key = event.which;
   switch(key) {
     case 37:
-      self.furry.direction = "left";
+      self.snake.direction = "left";
 
       break;
     case 38:
-      self.furry.direction = "up";
+      self.snake.direction = "up";
 
       break;
     case 39:
-      self.furry.direction = "right";
+      self.snake.direction = "right";
 
       break;
     case 40:
-      self.furry.direction = "down";
+      self.snake.direction = "down";
 
       break;
 
@@ -96,55 +95,55 @@ Game.prototype.keyboard = function(event) {
 
 Game.prototype.tick = function() {
 
-  var furryPosition = self.position(self.furry.x, self.furry.y)
-  switch(self.furry.direction) {
+  var snakePosition = self.position(self.snake.x, self.snake.y);
+  switch(self.snake.direction) {
     case "right":
-      self.furry.x++;
+      self.snake.x++;
       self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
 
       self.elements.pop();
 
-      self.elements.unshift(furryPosition);
+      self.elements.unshift(snakePosition);
       self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
     case "left":
-      self.furry.x--;
+      self.snake.x--;
       self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
       self.elements.pop();
-      self.elements.unshift(furryPosition);
+      self.elements.unshift(snakePosition);
       self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
     case "down":
-      self.furry.y++;
+      self.snake.y++;
       self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
       self.elements.pop();
-      self.elements.unshift(furryPosition);
+      self.elements.unshift(snakePosition);
       self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
     case "up":
-      self.furry.y--;
+      self.snake.y--;
       self.board[self.elements[self.elements.length - 1]].dataset.snake = "no";
       self.elements.pop();
-      self.elements.unshift(furryPosition);
+      self.elements.unshift(snakePosition);
       self.board[self.elements[0]].dataset.head = true;
       console.log(self.elements);
       break;
   }
   self.render();
 
-  var furryPosition = self.position(self.furry.x, self.furry.y);
+  var snakePosition = self.position(self.snake.x, self.snake.y);
   var coinPosition = self.position(self.coin.x, self.coin.y);
 
-  if(furryPosition == coinPosition) {
+  if(snakePosition == coinPosition) {
     self.score++;
     self.counter++;
-    self.elements[self.elements.length] = furryPosition;
+    self.elements[self.elements.length] = snakePosition;
 
     // console.log(self.elements);
-    self.board[furryPosition].classList.remove('coin');
+    self.board[snakePosition].classList.remove('coin');
     self.coin = new Coin;
     self.board[self.position(self.coin.x, self.coin.y)].classList.add('coin');
     self.scoreboard.innerHTML = self.score;
