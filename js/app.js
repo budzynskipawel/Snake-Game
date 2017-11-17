@@ -8,6 +8,7 @@ function Game() {
     this.scoreboard = document.querySelector('#scoreboard'),
     self = this,
     this.handler = setInterval(this.tick, 500),
+    // setInterval(this.tick, 500),
     document.addEventListener("keydown", this.keyboard)
 };
 /*snake constructor - coordinates x, y*/
@@ -64,7 +65,7 @@ Game.prototype.render = function() {
 
       window.location.reload(true);
     })
-    clearInterval(self.handler);
+    clearInterval(self.tick);
   };
   self.board[coinPosition].classList.add('coin');
 
@@ -92,6 +93,20 @@ Game.prototype.keyboard = function(event) {
       self.snake.direction = "down";
 
       break;
+
+    case 32:
+      console.log("hej");
+      clearInterval(self.handler);
+      document.addEventListener("keydown", function start(e) {
+        var key = e.which;
+        if(key == 83) {
+          console.log("hej ho");
+          self.handler = setInterval(self.tick, 500);
+          document.removeEventListener("keydown", start);
+        }
+      })
+      break;
+
 
 
   }
