@@ -65,7 +65,7 @@ Game.prototype.render = function() {
 
       window.location.reload(true);
     })
-    clearInterval(self.tick);
+    clearInterval(self.handler);
   };
   self.board[coinPosition].classList.add('coin');
 
@@ -74,7 +74,7 @@ Game.prototype.render = function() {
 
 
 
-Game.prototype.keyboard = function(event) {
+Game.prototype.keyboard = function keys(event) {
   key = event.which;
   switch(key) {
     case 37:
@@ -97,12 +97,14 @@ Game.prototype.keyboard = function(event) {
     case 32:
       console.log("hej");
       clearInterval(self.handler);
+      document.removeEventListener("keydown", keys);
       document.addEventListener("keydown", function start(e) {
         var key = e.which;
         if(key == 83) {
           console.log("hej ho");
           self.handler = setInterval(self.tick, 500);
           document.removeEventListener("keydown", start);
+          document.addEventListener("keydown", this.keyboard);
         }
       })
       break;
